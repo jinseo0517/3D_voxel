@@ -6,6 +6,8 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
+    // Walk -> Run / isWalk <-> isRun
+
     public float speed;
     float hAxis;
     float vAxis;
@@ -16,6 +18,7 @@ public class Player : MonoBehaviour
     bool isDodge;
 
     Vector3 moveVec;
+    Vector3 dodgeVec;
 
     Rigidbody rigid;
     Animator anim;
@@ -31,6 +34,8 @@ public class Player : MonoBehaviour
         GetInput();
         Move();
         Turn();
+        Jump();
+        Dodge();
     }
 
     void GetInput()
@@ -42,8 +47,10 @@ public class Player : MonoBehaviour
     }
     void Move()
     {
-
         moveVec = new Vector3(hAxis, 0, vAxis).normalized;
+
+        if (isDodge)
+            moveVec = dodgeVec;
 
         transform.position += moveVec * speed * (wDown ? 2.5f : 1f) * Time.deltaTime;   //삼항연산자
 
@@ -55,4 +62,46 @@ public class Player : MonoBehaviour
     {
         transform.LookAt(transform.position + moveVec);
     }
+    void Jump()
+    {
+        if (jDown && moveVec == Vector3.zero && !isJump && !isDodge)  
+        {              
+            rigid.AddForce(Vector3.up * 15, ForceMode.Impulse);
+            anim.SetBool("isJump", true);
+            anim.SetTrigger("doJump");
+            isJump = true;
+        }
+    }
+    void Dodge()
+    {
+        if (jDown && moveVec != Vector3.zero && !isJump && !isDodge)  
+        {
+            dodgeVec = moveVec;
+            speed *= 2;
+            anim.SetTrigger("doDodge");
+            isDodge = true;
+
+            // 살짝 띄우기
+            rigid.AddForce(Vector3.up * 10f, ForceMode.Impulse);
+
+
+            Invoke("DodgeOut", 0.6f); // Invoke() 함수로 시간차 함수 호출
+        }
+       
+    }
+    void DodgeOut()
+    {
+        speed *= 0.5f;
+        isDodge = false;
+    }
+    void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.tag == "Floor")
+        {
+            anim.SetBool("isJump", false);
+            isJump = false;
+        }
+    }
+
+
 }
