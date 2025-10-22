@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Security.Cryptography;
 using UnityEditor;
 using UnityEngine;
 
@@ -27,9 +28,20 @@ public class Player : MonoBehaviour
 
     private void Update()
     {
+        GetInput();
+        Move();
+        Turn();
+    }
+
+    void GetInput()
+    {
         hAxis = Input.GetAxisRaw("Horizontal");
         vAxis = Input.GetAxisRaw("Vertical");
         wDown = Input.GetButton("Run");
+        jDown = Input.GetButtonDown("Jump");
+    }
+    void Move()
+    {
 
         moveVec = new Vector3(hAxis, 0, vAxis).normalized;
 
@@ -38,9 +50,9 @@ public class Player : MonoBehaviour
         anim.SetBool("isWalk", moveVec != Vector3.zero);
         anim.SetBool("isRun", moveVec != Vector3.zero && wDown);
 
+    }
+    void Turn()
+    {
         transform.LookAt(transform.position + moveVec);
     }
-
-
-
 }
