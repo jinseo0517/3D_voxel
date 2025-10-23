@@ -33,7 +33,8 @@ public class Player : MonoBehaviour
     Animator anim;
 
     GameObject nearObject;
-    GameObject equipWeapon;
+    public GameObject equipWeapon;
+    int equipWeaponIndex = -1;
 
     void Awake()
     {
@@ -129,6 +130,13 @@ public class Player : MonoBehaviour
     }
     void Swap()
     {
+        if (sDown1 && (!hasWeapons[0] || equipWeaponIndex == 0))
+            return;
+        if (sDown2 && (!hasWeapons[1] || equipWeaponIndex == 1))
+            return;
+        if (sDown3 && (!hasWeapons[2] || equipWeaponIndex == 2))
+            return;
+
         int weaponIndex = -1;
         if (sDown1) weaponIndex = 0;
         if (sDown2) weaponIndex = 1;
@@ -138,7 +146,8 @@ public class Player : MonoBehaviour
         {
             if (equipWeapon != null)
                 equipWeapon.gameObject.SetActive(false);
-                    
+
+            equipWeaponIndex = weaponIndex;
             equipWeapon = weapons[weaponIndex];
             equipWeapon.SetActive(true);
 

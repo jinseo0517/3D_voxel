@@ -2134,12 +2134,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aea77a0d35fe9b242aec269c73dd04d3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 12
+  speed: 15
   weapons:
   - {fileID: 2138407605}
   - {fileID: 1925682789}
   - {fileID: 949842880}
   hasWeapons: 000000
+  equipWeapon: {fileID: 0}
 --- !u!54 &3333480900151728127
 Rigidbody:
   m_ObjectHideFlags: 0
