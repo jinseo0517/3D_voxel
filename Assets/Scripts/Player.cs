@@ -10,7 +10,18 @@ public class Player : MonoBehaviour
 
     public float speed;
     public GameObject[] weapons;
-    public bool[] hasWeapons; 
+    public bool[] hasWeapons;
+    public GameObject[] grenades;
+    public int hasGrenades;
+
+    public int ammo;
+    public int coin;
+    public int health;
+
+    public int maxAmmo;
+    public int maxCoin;
+    public int maxHealth;
+    public int maxHasGrenades;
 
     float hAxis;
     float vAxis;
@@ -120,14 +131,7 @@ public class Player : MonoBehaviour
         speed *= 0.5f;
         isDodge = false;
     }
-    void OnCollisionEnter(Collision collision)
-    {
-        if (collision.gameObject.tag == "Floor")
-        {
-            anim.SetBool("isJump", false);
-            isJump = false;
-        }
-    }
+    
     void Swap()
     {
         if (sDown1 && (!hasWeapons[0] || equipWeaponIndex == 0))
@@ -181,19 +185,63 @@ public class Player : MonoBehaviour
         }
     }
 
-    private void OnTriggerStay(Collider other)
+    void OnCollisionEnter(Collision collision)
     {
-        if (other.tag == "Weapon")
-            nearObject = other.gameObject;
-
-        Debug.Log(nearObject.name);
+        if (collision.gameObject.tag == "Floor")
+        {
+            anim.SetBool("isJump", false);
+            isJump = false;
+        }
     }
-    private void OnTriggerExit(Collider other)
-    {
-        if (other.tag == "Weapon")
-            nearObject = null;
-        
 
+    void OnTriggerEnter(Collider other)
+    {
+        if (other.tag == "Item")
+        {
+            Item item = other.GetComponent<Item>();
+            switch (item.type)
+            {
+                case Item.Type.Ammo:
+                    ammo += item.value;
+                    if (ammo > maxAmmo)
+                        ammo = maxAmmo;
+                    break;
+                case Item.Type.Coin:
+                    coin += item.value;
+                    if (coin > maxCoin)
+                        coin = maxCoin;
+                    break;
+                case Item.Type.Heart:
+                    health += item.value;
+                    if (health > maxHealth)
+                        health = maxHealth;
+                    break;
+                case Item.Type.Grenade:
+                    grenades[hasGrenades].SetActive(true);
+                    hasGrenades += item.value;
+                    if (hasGrenades > maxHasGrenades)
+                        hasGrenades = maxHasGrenades;
+                    break;
+            }
+            Destroy(other.gameObject);
+        }
+    }
+
+    private void OnTriggerStay(Collider other)  // 무기 콜라이더에 닿아 있는 동안 실행되는 함수
+    {
+        if (other.tag == "Weapon")  // 닿은 오브젝트의 태그가 "Weapon"일 경우
+        {
+            nearObject = other.gameObject;  // 해당 무기 오브젝트를 nearObject에 저장
+
+            if (nearObject != null) // nearObject가 null이 아니면 이름을 콘솔에 출력
+                Debug.Log(nearObject.name);
+        }
+
+    }
+    private void OnTriggerExit(Collider other)  // 무기 콜라이더에서 벗어났을 때 실행되는 함수
+    {
+        if (other.tag == "Weapon")  // 벗어난 오브젝트의 태그가 "Weapon"일 경우
+            nearObject = null;  // nearObject를 null로 초기화 (무기와 더 이상 가까이 있지 않음)
     }
 
 
