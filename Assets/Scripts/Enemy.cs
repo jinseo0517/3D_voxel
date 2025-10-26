@@ -27,7 +27,7 @@ public class Enemy : MonoBehaviour
     void Awake()
     {
         rigid = GetComponent<Rigidbody>();
-        rigid.isKinematic = true; // NavMeshAgent가 움직임을 제어하도록 설정
+        //rigid.isKinematic = true; // NavMeshAgent가 움직임을 제어하도록 설정
 
         //mat = GetComponentsInChildren<MeshRenderer>().material;
         MeshRenderer renderer = GetComponentInChildren<MeshRenderer>();
@@ -67,6 +67,15 @@ public class Enemy : MonoBehaviour
 
 
 
+    }
+    void FreezeVelocity()
+    {
+        rigid.velocity = Vector3.zero;
+        rigid.angularVelocity = Vector3.zero;
+    }
+    void FixedUpdate()
+    {
+        FreezeVelocity();
     }
 
     void OnTriggerEnter(Collider other)
