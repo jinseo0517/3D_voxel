@@ -88,7 +88,7 @@ public class Player : MonoBehaviour
         wDown = Input.GetButton("Run");
         jDown = Input.GetButtonDown("Jump");
         //iDown = Input.GetButtonDown("Interation");  <- 왜안됨??ㅜㅜㅜ
-        fDown = Input.GetButton("Fire1");   //마우스왼쪽
+        fDown = Input.GetButton("Fire1") || Input.GetKeyDown(KeyCode.Return);        //마우스왼쪽, 엔터키
         gDown = Input.GetButtonDown("Fire2");   //마우스오른쪽
         rDown = Input.GetKeyDown(KeyCode.R);
         iDown = Input.GetKeyDown(KeyCode.E);
@@ -349,6 +349,9 @@ public class Player : MonoBehaviour
             {
                 Bullet enemyBullet = other.GetComponent<Bullet>();
                 health -= enemyBullet.damage;
+
+                if (other.GetComponent<Rigidbody>() != null)
+                    Destroy(other.gameObject);
 
                 StartCoroutine(OnDamage());
             }
