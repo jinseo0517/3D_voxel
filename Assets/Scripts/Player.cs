@@ -41,6 +41,7 @@ public class Player : MonoBehaviour
     bool isSwap;
     bool isReload;
     bool isFireReady = true;
+    bool isBorder;
 
     Vector3 moveVec;
     Vector3 dodgeVec;
@@ -96,10 +97,9 @@ public class Player : MonoBehaviour
             moveVec = dodgeVec;
 
         if (isSwap || isReload || !isFireReady)
-        {
             moveVec = Vector3.zero;
-        }
 
+        if (!isBorder)
         transform.position += moveVec * speed * (wDown ? 2.5f : 1f) * Time.deltaTime;   //»ïÇ×¿¬»êÀÚ
 
         anim.SetBool("isWalk", moveVec != Vector3.zero);
@@ -252,6 +252,23 @@ public class Player : MonoBehaviour
                 Destroy(nearObject);
             }
         }
+    }
+
+    void FreezeRotation()
+    {
+        rigid.angularVelocity = Vector3.zero;
+    }
+
+    void StopToWall()
+    {
+        Debug.DrawRay(transform.position, transform.forward * 5, Color.green);
+        isBorder = Physics.Raycast(transform.position, transform.forward, 5, LayerMask.GetMask("Wall"));
+    }
+
+    void FixedUpdate()
+    {
+        FreezeRotation();
+        StopToWall();
     }
 
     void OnCollisionEnter(Collision collision)

@@ -10,9 +10,26 @@ public class Item : MonoBehaviour
     public Type type;   // 아이템 종류와 값을 저장할 변수 선언
     public int value;
 
+    Rigidbody rigid;
+    SphereCollider sphereCollider;
+
+    private void Awake()
+    {
+        rigid = GetComponent<Rigidbody>();
+        sphereCollider = GetComponent<SphereCollider>();
+    }
+
     void Update()
     {
         transform.Rotate(Vector3.up * 20 * Time.deltaTime);     // Rotate() 함수로 계속 회전하도록 효과 내기
     }
 
+    void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.tag == "Floor")
+        {
+            rigid.isKinematic = true;
+            sphereCollider.enabled = false;
+        }
+    }
 }
