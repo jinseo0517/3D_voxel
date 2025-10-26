@@ -5,7 +5,7 @@ using UnityEngine.AI;
 
 public class Enemy : MonoBehaviour
 {
-    public enum Type { A, B, C };
+    public enum Type { A, B, C, D };
     public Type enemyType;
     public int maxHealth;
     public int curHealth;
@@ -14,11 +14,11 @@ public class Enemy : MonoBehaviour
     public GameObject bullet;
     public bool isChase;
     public bool isAttack;
-
-    Rigidbody rigid;
-    BoxCollider boxCollider;
-    Material mat;
-    NavMeshAgent nav;
+    public bool isDead;
+    public Rigidbody rigid;
+    public BoxCollider boxCollider;
+    public MeshRenderer[] meshs;
+    public NavMeshAgent nav;
 
     void Start()
     {
@@ -35,20 +35,10 @@ public class Enemy : MonoBehaviour
         rigid = GetComponent<Rigidbody>();
         //rigid.isKinematic = true; // NavMeshAgent가 움직임을 제어하도록 설정
 
-        //mat = GetComponentsInChildren<MeshRenderer>().material;
-        MeshRenderer renderer = GetComponentInChildren<MeshRenderer>();
-        if (renderer != null)
-        {
-            nav = GetComponent<NavMeshAgent>();
-            mat = renderer.material;
-            // 만약 material이 없으면 새로 생성해서 넣기
-            if (mat == null)
-            {
-                mat = new Material(Shader.Find("Standard"));
-                renderer.material = mat;
-            }
-        }
-        Invoke("ChaseStart", 2);
+        meshs = GetComponentsInChildren<MeshRenderer>();
+       
+        if (enemyType != Type.D)
+            Invoke("ChaseStart", 2);
 
     }
     void ChaseStart()
@@ -58,15 +48,16 @@ public class Enemy : MonoBehaviour
     }
     void Update()
     {
-        if (nav.enabled)
+        if (nav.enabled && enemyType != Type.D)
         {
             nav.SetDestination(target.position);
             nav.isStopped = !isChase;
         }
         if (isChase && !isAttack)
         {
-            Targeting(); //  공격 조건 체크
+            Targeting(); //  추가
         }
+
 
     }
     void FreezeVelocity()
@@ -79,34 +70,37 @@ public class Enemy : MonoBehaviour
     }
     void Targeting()
     {
-        float targetRadius = 0;
-        float targetRange = 0;
-
-        switch (enemyType)
+        if (!isDead && enemyType != Type.D)
         {
-            case Type.A:
-                targetRadius = 1.5f;
-                targetRange = 3f;
-                break;
-            case Type.B:
-                targetRadius = 1f;
-                targetRange = 10f;
-                break;
-            case Type.C:
-                targetRadius = 0.5f;
-                targetRange = 25f;
-                break;
-        }
+            float targetRadius = 0;
+            float targetRange = 0;
 
-        RaycastHit[] rayHits =
-                Physics.SphereCastAll(transform.position, 
-                                    targetRadius,
-                                    transform.forward,
-                                    targetRange,
-                                    LayerMask.GetMask("Player"));
-        if (rayHits.Length > 0 && !isAttack)
-        {
-            StartCoroutine(Attack());
+            switch (enemyType)
+            {
+                case Type.A:
+                    targetRadius = 1.5f;
+                    targetRange = 3f;
+                    break;
+                case Type.B:
+                    targetRadius = 1f;
+                    targetRange = 10f;
+                    break;
+                case Type.C:
+                    targetRadius = 0.5f;
+                    targetRange = 25f;
+                    break;
+            }
+
+            RaycastHit[] rayHits =
+                    Physics.SphereCastAll(transform.position,
+                                        targetRadius,
+                                        transform.forward,
+                                        targetRange,
+                                        LayerMask.GetMask("Player"));
+            if (rayHits.Length > 0 && !isAttack)
+            {
+                StartCoroutine(Attack());
+            }
         }
     }
     IEnumerator Attack()
@@ -214,6 +208,7 @@ public class Enemy : MonoBehaviour
             }
 
             gameObject.layer = 14;
+            isDead = true;
             isChase =false;
             nav.enabled = false;
             //anim.SetTrigger("doDie");
@@ -236,6 +231,7 @@ public class Enemy : MonoBehaviour
 
             }
 
+            if(enemyType != Type.D)
             Destroy(gameObject, 4);
         }
     }
