@@ -8,6 +8,7 @@ public class Enemy : MonoBehaviour
     public int maxHealth;
     public int curHealth;
     public Transform target;
+    public bool isChase;
 
     Rigidbody rigid;
     BoxCollider boxCollider;
@@ -42,27 +43,27 @@ public class Enemy : MonoBehaviour
                 renderer.material = mat;
             }
         }
+        Invoke("ChaseStart", 2);
 
+    }
+    void ChaseStart()
+    {
+        isChase = true;
+        //anim.SetBool("isWalk", true);
     }
     void Update()
     {
-        if(target == null || nav == null) return;
 
-        if (!nav.isOnNavMesh)
-        {
-            Debug.LogWarning(" 적이 NavMesh 위에 있지 않음!");
-            return;
-        }
+        if (target == null || nav == null) return;
+        if (!nav.isOnNavMesh) return;
 
-        NavMeshHit hit;
-        if (NavMesh.SamplePosition(target.position, out hit, 2.0f, NavMesh.AllAreas))
+        if (isChase)
         {
-            nav.SetDestination(hit.position); // NavMesh 위 좌표로 보정해서 이동
-            Debug.DrawLine(transform.position, hit.position, Color.red);
-        }
-        else
-        {
-            Debug.LogWarning(" 플레이어가 NavMesh 위에 없음!");
+            NavMeshHit hit;
+            if (NavMesh.SamplePosition(target.position, out hit, 2.0f, NavMesh.AllAreas))
+            {
+                nav.SetDestination(hit.position);
+            }
         }
 
 
@@ -70,8 +71,11 @@ public class Enemy : MonoBehaviour
     }
     void FreezeVelocity()
     {
-        rigid.velocity = Vector3.zero;
-        rigid.angularVelocity = Vector3.zero;
+        if (isChase)
+        {
+            rigid.velocity = Vector3.zero;
+            rigid.angularVelocity = Vector3.zero;
+        }
     }
     void FixedUpdate()
     {
@@ -136,7 +140,10 @@ public class Enemy : MonoBehaviour
             }
 
             gameObject.layer = 14;
-        
+            isChase =false;
+            nav.enabled = false;
+            //anim.SetTrigger("doDie");
+
             if (isGrenade)
             {
                 reactVec = reactVec.normalized;
