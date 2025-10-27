@@ -269,10 +269,10 @@ public class Player : MonoBehaviour
 
     void Interation()
     {
-        if (iDown && nearObject != null ) //&& !isJump && !isDodge)
+        if (iDown && nearObject != null) //&& !isJump && !isDodge)
         {
             //if (iDown)
-                //Debug.Log("E키 눌림");
+            //Debug.Log("E키 눌림");
 
 
             if (nearObject.tag == "Weapon")
@@ -282,6 +282,12 @@ public class Player : MonoBehaviour
                 hasWeapons[weaponIndex] = true;
 
                 Destroy(nearObject);
+            }
+            else if (nearObject.tag == "Shop")
+            {
+                Shop shop = nearObject.GetComponent<Shop>();
+                shop.Enter(this);
+                //isShop = true;
             }
         }
     }
@@ -382,20 +388,22 @@ public class Player : MonoBehaviour
 
     private void OnTriggerStay(Collider other)  // 무기 콜라이더에 닿아 있는 동안 실행되는 함수
     {
-        if (other.tag == "Weapon")  // 닿은 오브젝트의 태그가 "Weapon"일 경우
+        if (other.tag == "Weapon" || other.tag == "Shop")  // 닿은 오브젝트의 태그가 "Weapon"일 경우
         {
             nearObject = other.gameObject;  // 해당 무기 오브젝트를 nearObject에 저장
 
-            if (nearObject != null) // nearObject가 null이 아니면 이름을 콘솔에 출력
-                Debug.Log(nearObject.name);
         }
-
     }
     private void OnTriggerExit(Collider other)  // 무기 콜라이더에서 벗어났을 때 실행되는 함수
     {
         if (other.tag == "Weapon")  // 벗어난 오브젝트의 태그가 "Weapon"일 경우
             nearObject = null;  // nearObject를 null로 초기화 (무기와 더 이상 가까이 있지 않음)
+        else if (other.tag == "Shop")
+        {
+            Shop shop = nearObject.GetComponent<Shop>();
+            shop.Exit();
+            //isShop = false;
+            nearObject = null;
+        }
     }
-
-
 }
