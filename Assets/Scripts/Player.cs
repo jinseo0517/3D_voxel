@@ -175,7 +175,7 @@ public class Player : MonoBehaviour
         fireDelay += Time.deltaTime;
         isFireReady = equipWeapon.rate < fireDelay;
 
-        if (fDown && isFireReady && !isDodge && !isSwap)
+        if (fDown && isFireReady && !isDodge && !isSwap && !isShop)
         { 
             equipWeapon.Use();
             anim.SetTrigger(equipWeapon.type == Weapon.Type.Melee ? "doSwing" : "doShot");
@@ -194,7 +194,7 @@ public class Player : MonoBehaviour
         if (ammo == 0)
             return;
 
-        if (rDown && !isJump && !isDodge && !isSwap && isFireReady) 
+        if (rDown && !isJump && !isDodge && !isSwap && isFireReady && !isShop) 
         {
             anim.SetTrigger("doReload");  //Reload애니메이션 없음 ㅠㅁㅠ
             isReload = true;
