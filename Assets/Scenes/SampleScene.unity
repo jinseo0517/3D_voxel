@@ -1286,8 +1286,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: "\uC544\uC774\uD15C \uC0C1\uC810 \uC785\uB2C8\uB2E4. \uADF8\uB0E5 \uB098\uAC00\uC2DC\uBA74
-    \uB429\uB2C8\uB2E4."
+  m_Text: "\uC5B4\uC11C\uC624\uC138\uC694~ \uC544\uC774\uD15C \uC0C1\uC810 \uC785\uB2C8\uB2E4. "
 --- !u!222 &164380494
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -8913,7 +8912,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 0, g: 0, b: 0, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -13917,8 +13916,7 @@ MonoBehaviour:
   - {fileID: 394803344}
   - {fileID: 1701939513}
   talkData:
-  - "\uC544\uC774\uD15C \uC0C1\uC810 \uC785\uB2C8\uB2E4. \uADF8\uB0E5 \uB098\uAC00\uC2DC\uBA74
-    \uB429\uB2C8\uB2E4."
+  - "\uC5B4\uC11C\uC624\uC138\uC694~ \uC544\uC774\uD15C \uC0C1\uC810 \uC785\uB2C8\uB2E4. "
   - "\uC18C\uC9C0\uAE08\uC774 \uBD80\uC871\uD569\uB2C8\uB2E4."
   talkText: {fileID: 164380493}
 --- !u!1 &1693018437
@@ -21730,6 +21728,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_IsActive
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1473919415376451504, guid: cced2eab51fc94b4c80b5a9ddb481ed4,
+        type: 3}
+      propertyPath: coin
+      value: 10000
       objectReference: {fileID: 0}
     - target: {fileID: 1473919415376451504, guid: cced2eab51fc94b4c80b5a9ddb481ed4,
         type: 3}

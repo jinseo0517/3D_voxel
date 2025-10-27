@@ -24,16 +24,10 @@ public class Shop : MonoBehaviour
 
     public void Exit()
     {
-        Debug.Log("Exit 버튼 눌림!");
+        //Debug.Log("Exit 버튼 눌림!");
 
         //anim.SetTrigger("doHello");
         uiGroup.anchoredPosition = Vector3.down * 1000;
-    }
-
-    public void OnExitButtonPressed()
-    {
-        Debug.Log("버튼 눌림!");
-        Exit();
     }
     public void Buy(int index)
     {

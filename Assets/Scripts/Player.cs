@@ -45,6 +45,7 @@ public class Player : MonoBehaviour
     bool isFireReady = true;
     bool isBorder;
     bool isDamage;
+    bool isShop;
 
     Vector3 moveVec;
     Vector3 dodgeVec;
@@ -287,7 +288,7 @@ public class Player : MonoBehaviour
             {
                 Shop shop = nearObject.GetComponent<Shop>();
                 shop.Enter(this);
-                //isShop = true;
+                isShop = true;
             }
         }
     }
@@ -402,7 +403,7 @@ public class Player : MonoBehaviour
         {
             Shop shop = nearObject.GetComponent<Shop>();
             shop.Exit();
-            //isShop = false;
+            isShop = false;
             nearObject = null;
         }
     }
