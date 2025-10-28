@@ -51,6 +51,7 @@ public class GameManager : MonoBehaviour
 
     void Awake()
     {
+        stage = 1;
         enemyList = new List<int>();
         maxScoreTxt.text = string.Format("{0:n0}", PlayerPrefs.GetInt("MaxScore"));
 
